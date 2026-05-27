@@ -22,7 +22,7 @@ const steps = [
   {
     field: 'message',
     label: 'Message',
-    question: 'What would you like to tell us?',
+    question: 'What do you think about us?',
     description: 'Share your thoughts or how you want to get involved.',
     placeholder: 'Write your message here...',
     type: 'textarea'

@@ -101,6 +101,7 @@ she-can-foundation
 │   └── package.json
 │
 └── README.md
+```text
 
 ---
 

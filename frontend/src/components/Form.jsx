@@ -71,24 +71,48 @@ const Form = () => {
 
     if (step === steps.length - 1) {
       setLoading(true)
+
       try {
-        await axios.post('http://localhost:5000/api/submissions', formData)
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/submissions`,
+          formData
+        )
+
         setSubmitted(true)
       } catch {
         setError('Something went wrong. Please try again.')
         setLoading(false)
       }
+
       return
     }
 
     setDirection(1)
-    setStep(s => s + 1)
+    setStep((s) => s + 1)
   }
 
   const handleBack = () => {
     setError('')
     setDirection(-1)
-    setStep(s => s - 1)
+    setStep((s) => s - 1)
+  }
+
+  const handleNewResponse = () => {
+    const emptyForm = {
+      name: '',
+      email: '',
+      message: ''
+    }
+
+    setFormData(emptyForm)
+    setStep(0)
+    setSubmitted(false)
+    setError('')
+    setLoading(false)
+
+    localStorage.removeItem('form_data')
+    localStorage.removeItem('form_step')
+    localStorage.removeItem('form_submitted')
   }
 
   const slideVariants = {
@@ -100,13 +124,20 @@ const Form = () => {
   return (
     <section id='contact' className='py-24 px-6 bg-[#FDF6F0]'>
       <div className='max-w-2xl mx-auto'>
-
         <div className='text-center mb-12'>
-          <p className='text-[#E8431A] font-semibold uppercase tracking-widest text-sm mb-3'>Get In Touch</p>
-          <h2 className='text-4xl font-bold text-[#1a1f3a]'>We Would Love to Hear From You</h2>
+          <p className='text-[#E8431A] font-semibold uppercase tracking-widest text-sm mb-3'>
+            Get In Touch
+          </p>
+
+          <h2 className='text-4xl font-bold text-[#1a1f3a]'>
+            We Would Love to Hear From You
+          </h2>
         </div>
 
-        <div className='bg-white rounded-3xl p-10' style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10)' }}>
+        <div
+          className='bg-white rounded-3xl p-10'
+          style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10)' }}
+        >
           {submitted ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -116,15 +147,44 @@ const Form = () => {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                transition={{
+                  delay: 0.2,
+                  type: 'spring',
+                  stiffness: 200
+                }}
                 className='w-16 h-16 bg-[#E8431A] rounded-full flex items-center justify-center mx-auto mb-6'
               >
-                <svg className='w-8 h-8 text-white' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2.5} d='M5 13l4 4L19 7' />
+                <svg
+                  className='w-8 h-8 text-white'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2.5}
+                    d='M5 13l4 4L19 7'
+                  />
                 </svg>
               </motion.div>
-              <h3 className='text-2xl font-bold text-[#1a1f3a] mb-3'>Thank You, {formData.name}!</h3>
-              <p className='text-gray-400'>Your message has been submitted. We will get back to you soon.</p>
+
+              <h3 className='text-2xl font-bold text-[#1a1f3a] mb-3'>
+                Thank You, {formData.name}!
+              </h3>
+
+              <p className='text-gray-400 mb-8'>
+                Your message has been submitted. We will get back to you soon.
+              </p>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleNewResponse}
+                className='bg-[#E8431A] text-white px-8 py-3 rounded-full font-medium hover:bg-[#c73a15] transition-colors'
+              >
+                Fill Another Response
+              </motion.button>
             </motion.div>
           ) : (
             <>
@@ -134,26 +194,61 @@ const Form = () => {
                     <div className='flex flex-col items-center gap-1'>
                       <motion.div
                         animate={{
-                          backgroundColor: i < step ? '#E8431A' : i === step ? '#1a1f3a' : '#e5e7eb',
+                          backgroundColor:
+                            i < step
+                              ? '#E8431A'
+                              : i === step
+                              ? '#1a1f3a'
+                              : '#e5e7eb',
                           scale: i === step ? 1.1 : 1
                         }}
                         className='w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold'
                       >
                         {i < step ? (
-                          <svg className='w-4 h-4 text-white' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={3} d='M5 13l4 4L19 7' />
+                          <svg
+                            className='w-4 h-4 text-white'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                          >
+                            <path
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth={3}
+                              d='M5 13l4 4L19 7'
+                            />
                           </svg>
                         ) : (
-                          <span style={{ color: i === step ? 'white' : '#9ca3af' }}>{i + 1}</span>
+                          <span
+                            style={{
+                              color:
+                                i === step ? 'white' : '#9ca3af'
+                            }}
+                          >
+                            {i + 1}
+                          </span>
                         )}
                       </motion.div>
-                      <span className={`text-xs font-medium ${i === step ? 'text-[#1a1f3a]' : i < step ? 'text-[#E8431A]' : 'text-gray-300'}`}>
+
+                      <span
+                        className={`text-xs font-medium ${
+                          i === step
+                            ? 'text-[#1a1f3a]'
+                            : i < step
+                            ? 'text-[#E8431A]'
+                            : 'text-gray-300'
+                        }`}
+                      >
                         {s.label}
                       </span>
                     </div>
+
                     {i < steps.length - 1 && (
                       <motion.div
-                        animate={{ backgroundColor: i < step ? '#E8431A' : '#e5e7eb' }}
+                        animate={{
+                          backgroundColor:
+                            i < step ? '#E8431A' : '#e5e7eb'
+                        }}
                         className='h-px w-16 rounded-full mb-4'
                         transition={{ duration: 0.4 }}
                       />
@@ -170,17 +265,30 @@ const Form = () => {
                   initial='enter'
                   animate='center'
                   exit='exit'
-                  transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{
+                    duration: 0.3,
+                    ease: [0.25, 0.46, 0.45, 0.94]
+                  }}
                 >
-                  <p className='text-gray-400 text-sm mb-1'>{steps[step].description}</p>
-                  <h3 className='text-2xl font-bold text-[#1a1f3a] mb-8'>{steps[step].question}</h3>
+                  <p className='text-gray-400 text-sm mb-1'>
+                    {steps[step].description}
+                  </p>
+
+                  <h3 className='text-2xl font-bold text-[#1a1f3a] mb-8'>
+                    {steps[step].question}
+                  </h3>
 
                   {steps[step].type === 'textarea' ? (
                     <textarea
                       rows={5}
                       placeholder={steps[step].placeholder}
                       value={formData[steps[step].field]}
-                      onChange={(e) => setFormData({ ...formData, [steps[step].field]: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [steps[step].field]: e.target.value
+                        })
+                      }
                       className='w-full border-2 border-gray-100 rounded-2xl px-5 py-4 text-[#1a1f3a] focus:outline-none focus:border-[#E8431A] resize-none transition-all duration-200 bg-gray-50/50 placeholder-gray-300'
                     />
                   ) : (
@@ -188,8 +296,15 @@ const Form = () => {
                       type={steps[step].type}
                       placeholder={steps[step].placeholder}
                       value={formData[steps[step].field]}
-                      onChange={(e) => setFormData({ ...formData, [steps[step].field]: e.target.value })}
-                      onKeyDown={(e) => e.key === 'Enter' && handleNext()}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [steps[step].field]: e.target.value
+                        })
+                      }
+                      onKeyDown={(e) =>
+                        e.key === 'Enter' && handleNext()
+                      }
                       className='w-full border-2 border-gray-100 rounded-2xl px-5 py-4 text-[#1a1f3a] focus:outline-none focus:border-[#E8431A] transition-all duration-200 bg-gray-50/50 placeholder-gray-300'
                     />
                   )}
@@ -212,7 +327,9 @@ const Form = () => {
                       >
                         Back
                       </button>
-                    ) : <div />}
+                    ) : (
+                      <div />
+                    )}
 
                     <motion.button
                       whileHover={{ scale: 1.02 }}
@@ -225,12 +342,20 @@ const Form = () => {
                         <>
                           <motion.div
                             animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 0.8,
+                              ease: 'linear'
+                            }}
                             className='w-4 h-4 border-2 border-white/30 border-t-white rounded-full'
                           />
                           Submitting
                         </>
-                      ) : step === steps.length - 1 ? 'Submit' : 'Continue'}
+                      ) : step === steps.length - 1 ? (
+                        'Submit'
+                      ) : (
+                        'Continue'
+                      )}
                     </motion.button>
                   </div>
                 </motion.div>
@@ -244,3 +369,4 @@ const Form = () => {
 }
 
 export default Form
+

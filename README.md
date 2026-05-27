@@ -51,25 +51,31 @@ The platform serves as the official digital presence of the organization while a
 
 # 📁 Project Structure
 
-she-can-foundation/
-├── backend/
-│   ├── config/
+```text
+she-can-foundation
+│
+├── backend
+│   ├── config
 │   │   └── db.js
-│   ├── models/
+│   │
+│   ├── models
 │   │   ├── Admin.js
 │   │   └── Submission.js
-│   ├── routes/
+│   │
+│   ├── routes
 │   │   ├── auth.js
 │   │   └── submissions.js
+│   │
 │   ├── seeder.js
 │   ├── server.js
 │   ├── .env
 │   └── package.json
 │
-├── frontend/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
+├── frontend
+│   ├── src
+│   │   ├── assets
+│   │   │
+│   │   ├── components
 │   │   │   ├── Navbar.jsx
 │   │   │   ├── Hero.jsx
 │   │   │   ├── About.jsx
@@ -78,10 +84,10 @@ she-can-foundation/
 │   │   │   ├── Form.jsx
 │   │   │   └── Footer.jsx
 │   │   │
-│   │   ├── context/
+│   │   ├── context
 │   │   │   └── AuthContext.jsx
 │   │   │
-│   │   ├── pages/
+│   │   ├── pages
 │   │   │   ├── Home.jsx
 │   │   │   ├── AdminLogin.jsx
 │   │   │   └── AdminDashboard.jsx

@@ -32,4 +32,23 @@ router.get('/', protect, async (req, res) => {
     }
 });
 
+// @route   DELETE /api/submissions/:id
+// @desc    Delete a submission
+// @access  Protected
+router.delete('/:id', protect, async (req, res) => {
+    try {
+        const submission = await Submission.findById(req.params.id);
+
+        if (!submission) {
+            return res.status(404).json({ message: 'Submission not found' });
+        }
+
+        await submission.deleteOne();
+
+        res.status(200).json({ message: 'Submission deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 export default router;
